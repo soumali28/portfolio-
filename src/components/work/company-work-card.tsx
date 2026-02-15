@@ -1,12 +1,13 @@
 import { ChevronRightIcon } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface CompanyWorkCardProps {
   logo?: string;
   company: string;
   role: string;
   duration: string;
-  description?: string;
+  highlights?: string[];
 }
 
 const CompanyWorkCard = ({
@@ -14,37 +15,58 @@ const CompanyWorkCard = ({
   company = "Pipeline AI (Techstack Inc)",
   role = "Frontend Developer Lead",
   duration = "June 2024 - Present",
-  description = "Leading frontend development...",
+  highlights,
 }: CompanyWorkCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [hovering, setHovering] = useState(false);
-  const cursorRef = useRef<HTMLDivElement>(null);
+
+  const bubbleRef = useRef<HTMLDivElement>(null);
+
+  const mouse = useRef({ x: 0, y: 0 });
+  const position = useRef({ x: 0, y: 0 });
+
+  // Smooth magnetic follow
+  useEffect(() => {
+    let animationFrame: number;
+
+    const animate = () => {
+      const speed = 0.15; // lower = more magnetic lag
+
+      position.current.x += (mouse.current.x - position.current.x) * speed;
+      position.current.y += (mouse.current.y - position.current.y) * speed;
+
+      if (bubbleRef.current) {
+        bubbleRef.current.style.transform = `translate(${position.current.x}px, ${position.current.y}px)`;
+      }
+
+      animationFrame = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
 
-    if (cursorRef.current) {
-      cursorRef.current.style.transform = `translate(${x}px, ${y}px)`;
-    }
+    mouse.current.x = e.clientX - rect.left + 12; // slight offset
+    mouse.current.y = e.clientY - rect.top + 12;
   };
 
   return (
-    <div
+    <motion.div
+      layout
       onClick={() => setExpanded(!expanded)}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       onMouseMove={handleMouseMove}
-      className="group relative hover:shadow-sm p-5 border border-zinc-200 rounded-xl w-full max-w-2xl transition-all duration-300 cursor-none"
+      className="group relative hover:shadow-sm p-5 rounded-xl w-full max-w-2xl transition-all duration-300 cursor-pointer"
     >
-      {/* Cursor Follow Bubble */}
+      {/* Floating Magnetic Bubble */}
       {hovering && (
-        <div
-          ref={cursorRef}
-          className="z-50 absolute transition-transform -translate-x-1/2 -translate-y-1/2 duration-75 pointer-events-none"
-        >
-          <div className="bg-black px-3 py-1 rounded-full font-medium text-white text-xs whitespace-nowrap">
+        <div ref={bubbleRef} className="z-50 absolute pointer-events-none">
+          <div className="bg-white/10 shadow-[0_5px_15px_rgba(0,0,0,0.12)] backdrop-blur-md px-4 py-1.5 border border-white/20 rounded-full font-accent font-medium text-sm whitespace-nowrap transition-all duration-300">
             {expanded ? "Hide" : "See More"}
           </div>
         </div>
@@ -52,7 +74,7 @@ const CompanyWorkCard = ({
 
       <div className="flex gap-4">
         {/* Logo */}
-        <div className="flex justify-center items-center bg-zinc-100 rounded-full w-12 h-12 shrink-0">
+        <div className="flex justify-center items-center bg-zinc-200/15 rounded-md w-12 h-12 shrink-0">
           {logo ? (
             <img
               src={logo}
@@ -60,19 +82,15 @@ const CompanyWorkCard = ({
               className="w-7 h-7 object-contain"
             />
           ) : (
-            <span className="font-semibold text-zinc-600 text-sm">
-              PA
-            </span>
+            <span className="font-semibold text-zinc-600 text-sm">PA</span>
           )}
         </div>
 
         {/* Content */}
         <div className="flex flex-col flex-1">
-          {/* Header */}
           <div className="flex justify-between items-center">
             <h2 className="flex items-center gap-1 font-semibold text-zinc-900">
               {company}
-
               <span
                 className={`text-secondary transition-all duration-300
                 opacity-0 translate-x-[-4px]
@@ -83,25 +101,52 @@ const CompanyWorkCard = ({
               </span>
             </h2>
 
-            <span className="text-secondary text-xs">
-              {duration}
-            </span>
+            <span className="text-secondary text-xs">{duration}</span>
           </div>
 
-          {/* Role */}
-          <p className="mt-[2px] text-zinc-600 text-sm">
-            {role}
-          </p>
+          <p className="mt-[2px] text-secondary text-sm">{role}</p>
 
-          {/* Description */}
-          {expanded && description && (
-            <p className="mt-3 text-zinc-700 text-sm leading-relaxed animate-fadeIn">
-              {description}
-            </p>
-          )}
+          <AnimatePresence initial={false}>
+            {expanded && highlights && (
+              <motion.ul
+                key="content"
+                initial={{ opacity: 0, height: 0, y: -5, filter: "blur(4px)" }}
+                animate={{
+                  opacity: 1,
+                  height: "auto",
+                  y: 0,
+                  filter: "blur(0px)",
+                }}
+                exit={{ opacity: 0, height: 0, y: -5, filter: "blur(4px)" }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="space-y-2 mt-3 overflow-hidden text-secondary text-sm"
+              >
+                {highlights.map((point, index) => (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    transition={{
+                      delay: index * 0.1,
+                      duration: 0.4,
+                      ease: "easeOut",
+                    }}
+                    className="flex items-start gap-2"
+                  >
+                    <span className="bg-zinc-500 mt-[6px] rounded-full w-1.5 h-1.5 shrink-0" />
+                    <span>{point}</span>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
