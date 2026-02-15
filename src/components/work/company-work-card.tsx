@@ -61,7 +61,7 @@ const CompanyWorkCard = ({
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       onMouseMove={handleMouseMove}
-      className="group relative hover:shadow-sm p-5 rounded-xl w-full max-w-2xl transition-all duration-300 cursor-pointer"
+      className="group relative hover:shadow-sm p-5 rounded-xl w-full transition-all duration-300 cursor-pointer"
     >
       {/* Floating Magnetic Bubble */}
       {hovering && (
