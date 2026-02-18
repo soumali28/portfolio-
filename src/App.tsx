@@ -5,6 +5,7 @@ import HowIWork from "./components/how-I-work/howIWork";
 import Work from "./components/work/work";
 import TopDesign from "./components/hero-section/top-design";
 import Projects from "./components/projects/projects";
+import Skills from "./components/skills/skills";
 
 function App() {
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -45,6 +46,7 @@ function App() {
             <About />
             <Work />
             <Projects />
+            <Skills />
             <HowIWork />
           </>
         )}

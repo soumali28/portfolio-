@@ -11,7 +11,7 @@ const Work = () => {
       highlight="Impact"
       showDivider={false}
     >
-      <div className="flex flex-col gap-4 mt-5">
+      <div className="flex flex-col gap-4 mt-4">
         {workExperience.map((work, index) => (
           <motion.div
             key={index}

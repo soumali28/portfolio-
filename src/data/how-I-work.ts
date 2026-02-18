@@ -13,7 +13,7 @@ export const howIWorkSteps = [
     aiDescription:"AI helps explore edge cases and validate ideas faster.",
       icon: Brain,
     floatingPosition: "top-3/4 left-20",
-    textPosition: "top-0 left-5",
+    textPosition: "top-70 left-0",
     image: one,
   },
   {
@@ -23,8 +23,8 @@ export const howIWorkSteps = [
       "I design and build scalable systems with clean architecture and thoughtful UX.",
     aiDescription:"AI speeds up prototyping and reduces boilerplate.",
       icon: Blocks,
-    floatingPosition: "right-[40%] bottom-[38%]",
-    textPosition: "top-45 right-50",
+    floatingPosition: "right-[45%] bottom-[38%]",
+    textPosition: "top-45 right-60",
     image: two,
   },
   {
@@ -35,7 +35,7 @@ export const howIWorkSteps = [
     aiDescription:"AI helps analyze feedback and automate workflows.",
       icon: Rocket,
     floatingPosition: "top-[2%] right-[10%]",
-    textPosition: "-top-40 right-5",
+    textPosition: "top-20 right-0",
     image: three,
   },
 ];

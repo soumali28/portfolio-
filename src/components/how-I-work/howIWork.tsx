@@ -12,11 +12,20 @@ const HowIWork = () => {
       className="h-100"
     >
       {/* Visual Timeline */}
-      <div className="relative my-12">
+      {/* <div className="max-w-sm">
+      <span className="text-secondary">
+        I approach every project with a product mindset — understanding user
+        problems deeply, building scalable and intuitive solutions, and shipping
+        early to validate with real feedback. With AI accelerating research and
+        iteration, I focus on delivering measurable impact, not just code.
+      </span>
+      </div> */}
+
+      <div className="relative my-0">
         <motion.img
           src={line}
           alt="How I work timeline"
-          className="mt-60 w-full"
+          className="w-full"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
@@ -59,7 +68,7 @@ const HowIWork = () => {
                   <img
                     src={step.image}
                     alt="How I work step icon"
-                    className="float-left mr-3 mb-2"
+                    className="float-left mr-3 mb-2 w-25 h-40"
                   />
 
                   <div>
